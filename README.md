@@ -26,6 +26,12 @@ Functions
 		- check if knock is big gin
 	Bonuses
 		- add the various end game bonuses
+	Deadwood
+		- dynamically calculates deadwood
+	Stack
+		- sorts cards into stack
+	Run
+		- sorts cards into run
 		
 Base variables
 	
@@ -34,3 +40,26 @@ Base variables
 	CPU score
 	Store number of hands won
 	
+AI
+
+	Check discard pile:
+		if card adds to stack or run, draw
+		else draw from draw pile
+		
+	Discard
+		if not in stack or run
+			discard highest deadwood
+		else if almost stack or run
+			discard highest irrelevant deadwood
+		else
+			dump random card not in meld
+			
+	Knock
+		If big gin
+			knock
+		else if gin
+			knock
+		else if deadwood <=7 knock && draw pile < x
+			knock
+		else
+			discard
