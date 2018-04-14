@@ -2,6 +2,7 @@
 Gin Rummy game outline
 
 Classes needed
+	
 	Card (maybe a struct)
 		private:
 			int value
@@ -13,6 +14,7 @@ Classes needed
 			organize runs and stacks in hand for player
 			
 Functions
+	
 	Knock
 		- must have 10 or less deadwood
 		- determine score on knock
@@ -26,6 +28,7 @@ Functions
 		- add the various end game bonuses
 		
 Base variables
+	
 	2 stacks - discard pile and draw pile
 	Player score
 	CPU score
