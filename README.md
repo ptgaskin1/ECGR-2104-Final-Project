@@ -7,7 +7,6 @@ Classes needed
 			int value
 			int suite (1 = spades; 2 = diamonds; 3 = hearts; 4 = clubs)
 			bool face (0 = number; 1 = face [including aces])
-					
 	Hand
 		private:
 			vector of 10 - 11 cards (10 base +1 drawn card each turn)
