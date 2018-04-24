@@ -28,6 +28,6 @@ card::card(string cardFace, string cardSuit)
 
 string card:: print() const
 {
-    return (face + "of" +suit);
+    return (face + "/" +suit);
 }
 #endif
