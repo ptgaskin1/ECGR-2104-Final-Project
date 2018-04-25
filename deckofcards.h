@@ -15,14 +15,14 @@ public:
     deckofcards();
     void shuffle();
     card dealcard();
-    void printdeck() const;
+    void printdeck();
 
 private:
     card *deck;
     int currentcard;
 };
 
-void deckofcards::printdeck() const
+void deckofcards::printdeck()
 {
    cout<<left;
    for(int i =0; i < cards_per_deck; i++)
@@ -35,7 +35,7 @@ void deckofcards::printdeck() const
 
 deckofcards::deckofcards()
 {
-    string faces[]={"Ace","2","3","4","5","6","7","8","9","10","J","Q","K"};
+    string faces[]={"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
     string suits[]= {"H", "D", "C", "S"};
     deck= new card[cards_per_deck];
     currentcard = 0;
