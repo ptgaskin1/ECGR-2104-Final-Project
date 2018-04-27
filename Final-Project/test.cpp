@@ -7,25 +7,19 @@ using namespace std;
 
 int main() {
 
-int input1;
-int input2;
+vector<card> player_hand;
 
-card card1(1, 4);
+deckofCards deck;
+deck.printDeck();
+deck.shuffleDeck();
+cout << endl;
+cout << "Shuffled deck\n";
+deck.printDeck();
+cout << endl;
 
-card1.printCard();
+player_hand = deck.dealCard();
 
-cout << card1.getValue() << endl;
-
-cout << "Enter face value: ";
-cin >> input1;
-cout << "Enter suit value: ";
-cin >> input2;
-
-card card2(input1, input2);
-
-card2.printCard();
-
-cout << card2.getValue() << endl;
+player_hand[0].printCard();
 
 
 return 0;

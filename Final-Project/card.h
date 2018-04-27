@@ -1,8 +1,9 @@
 #define CARD_H
 #include <iostream>
 #include <vector>
-#include <cmath>
+#include <ctime>
 #include <string>
+#include <cstdlib>
 using namespace std;
 
 class card
@@ -20,12 +21,15 @@ class card
 		int suit; //1 - heart, 2- diamond, 3 - club, 4 - spade
 };
 
-class deck
+class deckofCards
 {
 	public:
-		
+		deckofCards();
+		void shuffleDeck();
+		card dealCard();
+		void printDeck();
 	private:
-		vector<card> 
+		vector<card> deck;
 		
 };
 
@@ -123,5 +127,38 @@ void card::printCard() {
 	cout << value << " of " << type << endl;
 }
 		
+deckofCards::deckofCards() {
+	for(int x = 1; x < 5; x++) {
+		for(int y = 1; y < 14; y++) {
+			card card1(y,x);
+			deck.push_back(card1);
+		}
+	}
+}
+
+void deckofCards::printDeck() {
+	for(int i = 0; i < 52; i++) {		
+		deck[i].printCard();
+	}
+}
+
+void deckofCards::shuffleDeck() {
+    for(int first = 0; first < 52; first++)
+    {
+        int second = (rand() + time(0))% 52;
+        card temp = deck[first];
+        deck[first] = deck[second];
+        deck[second]= temp;
+    }
+}
+
+card deckofCards::dealCard() {
+	card card1;
+
+	card1 = deck.begin();
+	deck.erase(deck.begin());
+
+	return card1;
+}
 
 
