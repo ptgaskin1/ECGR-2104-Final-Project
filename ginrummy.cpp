@@ -96,6 +96,20 @@ void displayAllCards(){
 
 }
 
+void knock(){
+	int cardChoice = 1;
+	cout << "Discard a card from your hand. Enter an integer 1-11 to select your card: ";
+	cin >> cardChoice;
+	if(turn%2==1){		
+		discardPile.push_back(playerHand[cardChoice-1]);
+		playerHand.erase(playerHand.begin()+(cardChoice-1));
+	}	
+	else if(turn%2==0){
+		discardPile.push_back(computerHand[cardChoice-1]);
+		computerHand.erase(computerHand.begin()+(cardChoice-1));
+	}	
+}
+
 void discardCard(){
 	int cardChoice = 1;
 	//while(cardChoice < 1 && cardChoice > 11){
@@ -148,13 +162,23 @@ void takeTurn(){
 int main(){
 	
 	setupGame();
+	int h;
+	int x;
 
-	while(true){
+	while(x != 1){
 
 		displayAllCards();
 		takeTurn();
 		displayAllCards();
-		discardCard();
+		cout << "Enter 1 to discard or 2 to knock: ";
+		cin >> h;
+		if(h == 1) {
+			discardCard();
+		}
+		else if(h == 2) {
+			knock();
+			x = 1;
+		}
 
 	}
 
