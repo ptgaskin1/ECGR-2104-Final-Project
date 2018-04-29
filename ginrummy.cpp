@@ -96,7 +96,45 @@ void displayAllCards(){
 
 }
 
+void checkRun(vector<int>) {
+	
+}
+
+void checkStack(vector<int>) {
+
+}
+
+void defendKnock(vector<int>) {
+
+}
+
 void knock(){
+	int cardChoice = 1;
+	cout << "Discard a card from your hand. Enter an integer 1-11 to select your card: ";
+	cin >> cardChoice;
+	if(turn%2==1){		
+		discardPile.push_back(playerHand[cardChoice-1]);
+		playerHand.erase(playerHand.begin()+(cardChoice-1));
+	}	
+	else if(turn%2==0){
+		discardPile.push_back(computerHand[cardChoice-1]);
+		computerHand.erase(computerHand.begin()+(cardChoice-1));
+	}
+	
+	checkRun(playerHand);
+	checkRun(computerHand);
+	checkStack(playerHand);
+	checkStack(computerHand);
+
+	if (turn%2==1){		
+		defendKnock(computerHand);
+	}
+	else if (turn%2==0){
+		defendKnock(playerHand);
+	}
+}
+
+void discardCard(){
 	int cardChoice = 1;
 	cout << "Discard a card from your hand. Enter an integer 1-11 to select your card: ";
 	cin >> cardChoice;
@@ -110,52 +148,29 @@ void knock(){
 	}	
 }
 
-void discardCard(){
-	int cardChoice = 1;
-	//while(cardChoice < 1 && cardChoice > 11){
-		cout << "Discard a card from your hand. Enter an integer 1-11 to select your card: ";
-		cin >> cardChoice;
-		if(turn%2==1){		
-			discardPile.push_back(playerHand[cardChoice-1]);
-			playerHand.erase(playerHand.begin()+(cardChoice-1));
-		}	
-		else if(turn%2==0){
-			discardPile.push_back(computerHand[cardChoice-1]);
-			computerHand.erase(computerHand.begin()+(cardChoice-1));
-		}	
-	//}
-}
-
 void takeTurn(){
 
 	turn++;
 	int drawSelect=0;
-	//while(drawSelect!=1 && drawSelect!=2){
-		cout << "Draw a card. Enter 1 for Stock Pile or 2 for Discard Pile: ";
-		cin >> drawSelect;
-		if(drawSelect==1 && turn%2==1){
-			playerHand.push_back(stockPile.back());
-			stockPile.pop_back();
-			
-		}
-		else if(drawSelect==1 && turn%2==0){
-			computerHand.push_back(stockPile.back());
-			stockPile.pop_back();
-			
-		}
-		else if(drawSelect==2 && turn%2==1){
-			playerHand.push_back(discardPile.back());
-			discardPile.pop_back();
-			
-		}
-		else if(drawSelect==2 && turn%2==0){
-			computerHand.push_back(discardPile.back());
-			discardPile.pop_back();
-			
-		}
+	cout << "Draw a card. Enter 1 for Stock Pile or 2 for Discard Pile: ";
+	cin >> drawSelect;
+	if(drawSelect==1 && turn%2==1){
+		playerHand.push_back(stockPile.back());
+		stockPile.pop_back();
+	}
+	else if(drawSelect==1 && turn%2==0){
+		computerHand.push_back(stockPile.back());
+		stockPile.pop_back();
+	}
+	else if(drawSelect==2 && turn%2==1){
+		playerHand.push_back(discardPile.back());
+		discardPile.pop_back();
+	}
+	else if(drawSelect==2 && turn%2==0){
+		computerHand.push_back(discardPile.back());
+		discardPile.pop_back();
+	}
 		
-	//}
-
 }
 
 
@@ -163,7 +178,7 @@ int main(){
 	
 	setupGame();
 	int h;
-	int x;
+	bool x = 0;
 
 	while(x != 1){
 
