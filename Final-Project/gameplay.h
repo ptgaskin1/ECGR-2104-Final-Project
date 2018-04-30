@@ -17,10 +17,10 @@ class gameplay {
 		//void defendKnock();
 		//void findMelds();
 		void drawCard();
-		//void discardCard();
-		//void knock();
-		//int scorePlayerDeadwood();
-		//int scoreCPUDeadwood();
+		void discardCard();
+		void knock();
+		int scorePlayerDeadwood();
+		int scoreCPUDeadwood();
 	private:
 		vector<card> stockPile;
 		vector<card> discardPile;
@@ -93,8 +93,10 @@ void gameplay::displayAllCards() {
 	}
 
 	cout << endl << endl;
-	
+}
 
+void gameplay::findMelds() {
+	//find the melds in the player/computer's hand
 }
 
 void gameplay::drawCard() {
@@ -121,6 +123,42 @@ void gameplay::drawCard() {
 		discardPile.pop_back();
 	}
 	displayAllCards();
+}
+
+void gameplay::discardCard() {
+	int cardChoice = 0;
+	cout << endl << "Enter a number between 0-9 to select a card from your hand to discard (10 was just drawn so it cannot be discarded this turn): ";
+	cin >> cardChoice;
+	if(turn%2==1){		
+		discardPile.push_back(playerHand[cardChoice]);
+		playerHand.erase(playerHand.begin()+cardChoice);
+	}	
+	else if(turn%2==0){
+		discardPile.push_back(computerHand[cardChoice]);
+		computerHand.erase(computerHand.begin()+cardChoice);
+	}
+
+}
+
+void gameplay::knock() {
+	discardCard();
+	displayAllCards();
+}
+
+int gameplay::scorePlayerDeadwood() {
+	int sum = 0;	
+	for(int i = 0; i < playerHand.size(); i++) {
+		sum += playerHand[i].getValue();
+	}
+	return sum;
+}
+
+int gameplay::scoreCPUDeadwood() {
+	int sum = 0;	
+	for(int i = 0; i < computerHand.size(); i++) {
+		sum += computerHand[i].getValue();
+	}
+	return sum;
 }
 
 #endif
