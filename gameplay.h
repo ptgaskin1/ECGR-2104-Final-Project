@@ -70,6 +70,8 @@ gameplay::gameplay() {
 
 void gameplay::displayAllCards() {
 
+	findMelds();
+
 	string deck[13][4] = {
 		
 		{ " 🂡 " , " 🂱 " , " 🃁 " , " 🃑 " },
@@ -100,14 +102,15 @@ void gameplay::displayAllCards() {
 
 	};
 	
-	cout << endl << "Player Hand: ";
+	cout << endl << "Your Hand: ";
 	for(int i=0; i<playerHand.size(); i++){
 		cout << deck[playerHand[i]/4][playerHand[i]%4] << "<-" << i;
 	}
 	cout << endl << endl;
 	if(playerMelds.size()>0){
-		cout << endl << "Player Melds: ";
+		cout << endl << "Possible Melds: ";
 		for(int i=0; i<playerMelds.size(); i++){
+			cout << " , ";
 			for(int j=0; j<playerMelds[i].size(); j++){
 				cout << deck[playerMelds[i][j]/4][playerMelds[i][j]%4];
 			}
@@ -147,25 +150,64 @@ void gameplay::findMelds() {
 	playerMelds.resize(0);
 	for(int i=0; i<playerHand.size(); i++){	
 		for(int j=i+1; j<playerHand.size(); j++){
-			if(playerHand[i]/4==playerHand[j]/4){
-				playerMelds.resize(playerMeldsCount+1);
-				//playerMelds[playerMeldsCount].resize(0);
-				playerMelds[playerMeldsCount].push_back(playerHand[i]);
-				playerMelds[playerMeldsCount].push_back(playerHand[j]);
-				playerMeldsCount++;
+			if(playerHand[j]/4==playerHand[i]/4){
+				for(int k=j+1; k<playerHand.size(); k++){
+					if(playerHand[k]/4==playerHand[j]/4){
+						playerMelds.resize(playerMeldsCount+1);
+						playerMelds[playerMeldsCount].push_back(playerHand[i]);
+						playerMelds[playerMeldsCount].push_back(playerHand[j]);
+						playerMelds[playerMeldsCount].push_back(playerHand[k]);
+						for(int l=k+1; l<playerHand.size(); l++){
+							if(playerHand[l]/4==playerHand[k]/4){
+								playerMelds[playerMeldsCount].push_back(playerHand[l]);
+							}
+						}
+						playerMeldsCount++;
+					}
+				}
+			}
+		}
+	}
+	for(int i=0; i<playerHand.size(); i++){	
+		for(int j=i+1; j<playerHand.size(); j++){
+			if(playerHand[j]%4==playerHand[i]%4){
+				for(int k=j+1; k<playerHand.size(); k++){
+					if(playerHand[k]%4==playerHand[j]%4){
+						//playerHand[i], playerHand[j], and playerHand[k] compare
+						for(int l=k+1; l<playerHand.size(); l++){
+							if(playerHand[l]%4==playerHand[k]%4){
+								//playerHand[i], playerHand[j], playerHand[k], and playerHand[l] compare
+								for(int m=l+1; m<playerHand.size(); m++){
+									if(playerHand[m]%4==playerHand[l]%4){
+									//playerHand[i], playerHand[j], playerHand[k], playerHand[l], and playerHand[m] compare (no more for loops needed since a run of six or more can be broken up into runs of three and four)
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
 	int computerMeldsCount=0;
 	computerMelds.resize(0);
-	for(int i=0; i<computerHand.size(); i++){	
+	for(int i=0; i<computerHand.size(); i++){
 		for(int j=i+1; j<computerHand.size(); j++){
-			if(computerHand[i]/4==computerHand[j]/4){
-				computerMelds.resize(computerMeldsCount+1);
-				//computerMelds[computerMeldsCount].resize(0);
-				computerMelds[computerMeldsCount].push_back(computerHand[i]);
-				computerMelds[computerMeldsCount].push_back(computerHand[j]);
-				computerMeldsCount++;
+			if(computerHand[j]/4==computerHand[i]/4){
+				for(int k=j+1; k<computerHand.size(); k++){
+					if(computerHand[k]/4==computerHand[j]/4){
+						computerMelds.resize(computerMeldsCount+1);
+						computerMelds[computerMeldsCount].push_back(computerHand[i]);
+						computerMelds[computerMeldsCount].push_back(computerHand[j]);
+						computerMelds[computerMeldsCount].push_back(computerHand[k]);
+						for(int l=k+1; l<computerHand.size(); l++){
+							if(computerHand[l]/4==computerHand[k]/4){
+								computerMelds[computerMeldsCount].push_back(computerHand[l]);
+							}
+						}
+						computerMeldsCount++;
+					}
+				}
 			}
 		}
 	}
@@ -173,6 +215,8 @@ void gameplay::findMelds() {
 
 void gameplay::drawCard() {
 	turn++;
+	cout << "Turn #" << turn << endl;
+	displayAllCards();
 	int drawSelect=0;
 	cout << "Draw a card. Enter 1 for Stock Pile or 2 for Discard Pile: ";
 	cin >> drawSelect;
@@ -192,6 +236,7 @@ void gameplay::drawCard() {
 		computerHand.push_back(discardPile.back());
 		discardPile.pop_back();
 	}
+	displayAllCards();
 }
 
 
@@ -210,18 +255,9 @@ void gameplay::discardCard() {
 
 }
 
-void gameplay::knock() { //IDENTICAL TO discardCard
-	int cardChoice = 0;
-	cout << endl << "Enter a number between 0-9 to select a card from your hand to discard (10 was just drawn so it cannot be discarded this turn): ";
-	cin >> cardChoice;
-	if(turn%2==1){		
-		discardPile.push_back(playerHand[cardChoice]);
-		playerHand.erase(playerHand.begin()+cardChoice);
-	}	
-	else if(turn%2==0){
-		discardPile.push_back(computerHand[cardChoice]);
-		computerHand.erase(computerHand.begin()+cardChoice);
-	}
+void gameplay::knock() {
+	discardCard();
+	displayAllCards();
 }
 
 int gameplay::scorePlayerDeadwood() {

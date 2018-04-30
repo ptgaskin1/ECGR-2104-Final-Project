@@ -5,28 +5,22 @@ using namespace std;
 int main() {
 	gameplay game;
 
-	bool keepPlaying = 1;
+	string keepPlaying = "";
 
-	while(keepPlaying == 1){
+	while(keepPlaying != "n" && keepPlaying != "N"){
 
-		game.findMelds();
-		game.displayAllCards();
 		game.drawCard();
-		game.findMelds();
-		game.displayAllCards();
-		cout << "Enter 1 to discard or 0 to knock (end game): ";
+		cout << "Enter 'n' or 'N' to knock and end the game, or enter any other key to continue: ";
 		cin >> keepPlaying;
-		if(keepPlaying == 1) {
-			game.discardCard();
-		}
-		else if(keepPlaying == 0) {
+		if(keepPlaying == "n" || keepPlaying == "N") {
 			game.knock();
+		}
+		else{
+			game.discardCard();
 		}
 
 	}
 	
-	game.findMelds();
-	game.displayAllCards();
 	
 	cout << "Player deadwood: " << game.scorePlayerDeadwood() << endl;
 	cout << "CPU deadwood: " << game.scoreCPUDeadwood() << endl;
