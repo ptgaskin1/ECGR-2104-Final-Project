@@ -24,13 +24,9 @@ class gameplay {
 		vector<int> stockPile;
 		vector<int> discardPile;
 		vector<int> playerHand;
-		vector<int> playerMeld1;
-		vector<int> playerMeld2;
-		vector<int> playerMeld3;
+		vector< vector<int> > playerMelds;
 		vector<int> computerHand;
-		vector<int> computerMeld1;
-		vector<int> computerMeld2;
-		vector<int> computerMeld3;
+		vector< vector<int> > computerMelds;
 		int turn;
 };
 
@@ -106,57 +102,73 @@ void gameplay::displayAllCards() {
 	
 	cout << endl << "Player Hand: ";
 	for(int i=0; i<playerHand.size(); i++){
-		cout << deck[playerHand[i]%13][playerHand[i]%4] << "<-" << i;
+		cout << deck[playerHand[i]/4][playerHand[i]%4] << "<-" << i;
 	}
 	cout << endl << endl;
-	if(playerMeld1.size()>0){
+	if(playerMelds.size()>0){
 		cout << endl << "Player Melds: ";
-		for(int i=0; i<playerMeld1.size(); i++){
-			cout << deck[playerMeld1[i]%13][playerMeld1[i]%4] << "<-" << i;
-		}
-		for(int i=0; i<playerMeld2.size(); i++){
-			cout << deck[playerMeld2[i]%13][playerMeld2[i]%4] << "<-" << i;
-		}
-		for(int i=0; i<playerMeld3.size(); i++){
-			cout << deck[playerMeld3[i]%13][playerMeld3[i]%4] << "<-" << i;
+		for(int i=0; i<playerMelds.size(); i++){
+			for(int j=0; j<playerMelds[i].size(); j++){
+				cout << deck[playerMelds[i][j]/4][playerMelds[i][j]%4];
+			}
 		}
 		cout << endl << endl;
 	}
 	cout << endl << "Computer Hand: ";
 	for(int i=0; i<computerHand.size(); i++){
-		cout << deck[computerHand[i]%13][computerHand[i]%4] << "<-" << i;
+		cout << deck[computerHand[i]/4][computerHand[i]%4] << "<-" << i;
 	}
 	cout << endl << endl;
-	if(computerMeld1.size()>0){
+	if(computerMelds.size()>0){
 		cout << endl << "Computer Melds: ";
-		for(int i=0; i<computerMeld1.size(); i++){
-			cout << deck[computerMeld1[i]%13][computerMeld1[i]%4] << "<-" << i;
-		}
-		for(int i=0; i<computerMeld2.size(); i++){
-			cout << deck[computerMeld2[i]%13][computerMeld2[i]%4] << "<-" << i;
-		}
-		for(int i=0; i<computerMeld3.size(); i++){
-			cout << deck[computerMeld3[i]%13][computerMeld3[i]%4] << "<-" << i;
+		for(int i=0; i<computerMelds.size(); i++){
+			for(int j=0; j<computerMelds[i].size(); j++){
+				cout << deck[computerMelds[i][j]/4][computerMelds[i][j]%4];
+			}
 		}
 		cout << endl << endl;
 	}
 	cout << endl << "Discard Pile: ";
 	for(int i=0; i<discardPile.size(); i++){
-		cout << deck[discardPile[i]%13][discardPile[i]%4];
+		cout << deck[discardPile[i]/4][discardPile[i]%4];
 	}
 	cout << endl << endl;
 	cout << endl << "Stock Pile: ";
 	for(int i=0; i<stockPile.size(); i++){
-		cout << deck[stockPile[i]%13][stockPile[i]%4];
+		cout << deck[stockPile[i]/4][stockPile[i]%4];
 	}
 	cout << endl << endl;
 
 }
 
 void gameplay::findMelds() {
-
 //find and optimize the melds (sets and runs) in player/computer's hand
-
+	int playerMeldsCount=0;
+	playerMelds.resize(0);
+	for(int i=0; i<playerHand.size(); i++){	
+		for(int j=i+1; j<playerHand.size(); j++){
+			if(playerHand[i]/4==playerHand[j]/4){
+				playerMelds.resize(playerMeldsCount+1);
+				//playerMelds[playerMeldsCount].resize(0);
+				playerMelds[playerMeldsCount].push_back(playerHand[i]);
+				playerMelds[playerMeldsCount].push_back(playerHand[j]);
+				playerMeldsCount++;
+			}
+		}
+	}
+	int computerMeldsCount=0;
+	computerMelds.resize(0);
+	for(int i=0; i<computerHand.size(); i++){	
+		for(int j=i+1; j<computerHand.size(); j++){
+			if(computerHand[i]/4==computerHand[j]/4){
+				computerMelds.resize(computerMeldsCount+1);
+				//computerMelds[computerMeldsCount].resize(0);
+				computerMelds[computerMeldsCount].push_back(computerHand[i]);
+				computerMelds[computerMeldsCount].push_back(computerHand[j]);
+				computerMeldsCount++;
+			}
+		}
+	}
 }
 
 void gameplay::drawCard() {
@@ -192,7 +204,7 @@ void gameplay::discardCard() {
 		playerHand.erase(playerHand.begin()+cardChoice);
 	}	
 	else if(turn%2==0){
-		discardPile.push_back(computerHand[cardChoice-1]);
+		discardPile.push_back(computerHand[cardChoice]);
 		computerHand.erase(computerHand.begin()+cardChoice);
 	}
 
@@ -207,7 +219,7 @@ void gameplay::knock() { //IDENTICAL TO discardCard
 		playerHand.erase(playerHand.begin()+cardChoice);
 	}	
 	else if(turn%2==0){
-		discardPile.push_back(computerHand[cardChoice-1]);
+		discardPile.push_back(computerHand[cardChoice]);
 		computerHand.erase(computerHand.begin()+cardChoice);
 	}
 }
@@ -215,74 +227,74 @@ void gameplay::knock() { //IDENTICAL TO discardCard
 int gameplay::scorePlayerDeadwood() {
 	int sum = 0;	
 	for(int i = 0; i < playerHand.size(); i++) {
-		if(playerHand[i]%13 < 10) {
-			sum += playerHand[i]%13+1;
+		if(playerHand[i]/4 < 10) {
+			sum += playerHand[i]/4+1;
 		}
 		else {
 			sum += 10;
 		}
 	}
-	for(int i = 0; i < playerMeld1.size(); i++) {
-		if(playerMeld1[i]%13 < 10) {
-			sum -= playerMeld1[i]%13+1;
+	/*for(int i = 0; i < playerMeld1.size(); i++) {
+		if(playerMeld1[i]/4 < 10) {
+			sum -= playerMeld1[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
 	}
 	for(int i = 0; i < playerMeld2.size(); i++) {
-		if(playerMeld2[i]%13 < 10) {
-			sum -= playerMeld2[i]%13+1;
+		if(playerMeld2[i]/4 < 10) {
+			sum -= playerMeld2[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
 	}
 	for(int i = 0; i < playerMeld3.size(); i++) {
-		if(playerMeld3[i]%13 < 10) {
-			sum -= playerMeld3[i]%13+1;
+		if(playerMeld3[i]/4 < 10) {
+			sum -= playerMeld3[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
-	}
+	}*/
 	return sum;
 }
 
 int gameplay::scoreCPUDeadwood() {
 	int sum = 0;	
 	for(int i = 0; i < computerHand.size(); i++) {
-		if(computerHand[i]%13 < 10) {
-			sum += computerHand[i]%13+1;
+		if(computerHand[i]/4 < 10) {
+			sum += computerHand[i]/4+1;
 		}
 		else {
 			sum += 10;
 		}
 	}
-	for(int i = 0; i < computerMeld1.size(); i++) {
-		if(computerMeld1[i]%13 < 10) {
-			sum -= computerMeld1[i]%13+1;
+	/*for(int i = 0; i < computerMeld1.size(); i++) {
+		if(computerMeld1[i]/4 < 10) {
+			sum -= computerMeld1[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
 	}
 	for(int i = 0; i < computerMeld2.size(); i++) {
-		if(computerMeld2[i]%13 < 10) {
-			sum -= computerMeld2[i]%13+1;
+		if(computerMeld2[i]/4 < 10) {
+			sum -= computerMeld2[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
 	}
 	for(int i = 0; i < computerMeld3.size(); i++) {
-		if(computerMeld3[i]%13 < 10) {
-			sum -= computerMeld3[i]%13+1;
+		if(computerMeld3[i]/4 < 10) {
+			sum -= computerMeld3[i]/4+1;
 		}
 		else {
 			sum -= 10;
 		}
-	}
+	}*/
 	return sum;
 }
 

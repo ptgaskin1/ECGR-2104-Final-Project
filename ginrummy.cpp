@@ -9,8 +9,10 @@ int main() {
 
 	while(keepPlaying == 1){
 
+		game.findMelds();
 		game.displayAllCards();
 		game.drawCard();
+		game.findMelds();
 		game.displayAllCards();
 		cout << "Enter 1 to discard or 0 to knock (end game): ";
 		cin >> keepPlaying;
@@ -23,6 +25,7 @@ int main() {
 
 	}
 	
+	game.findMelds();
 	game.displayAllCards();
 	
 	cout << "Player deadwood: " << game.scorePlayerDeadwood() << endl;
